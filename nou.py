@@ -1,8 +1,8 @@
 ﻿from pygame import *
 import sys
 
+#создание ок
 
-#создание оана
 win_width = 800
 win_down = 600
 window = display.set_mode((win_width,win_down))
@@ -48,15 +48,14 @@ class Plair(GameSpraite):
                 self.paver = 14
     def new(self,ret):
         self.image = transform.scale(image.load(ret),(self.size_x+35,self.size_y))
-        finush = True
     def new2(self,ret):
         self.image = transform.scale(image.load(ret),(self.size_x,self.size_y))
-        finush = True
 class Enemi(GameSpraite):
     def upleut(self):
         self.rect.x-=self.speed
-        if self.rect.x < -50:
-            self.rect.x = win_width -20
+        if self.rect.x < dal_lain:
+            self.rect.x = win_width + 20
+            x_dino = self.rect.x
             global point
             point += 1
             if reform == True:
@@ -65,30 +64,46 @@ class Enemi(GameSpraite):
 class bonys(GameSpraite):
     def upleut(self):
         self.rect.x-=self.speed
-        if self.rect.x < -100:
-            self.rect.x = win_width -20
+        if self.rect.x <= 0:
+            self.rect.x = x_dino - 200
 
 class train(GameSpraite):
     def upleut(self):
         self.rect.x-=self.speed
         if self.rect.x < -200:
             self.rect.x = win_width -20
+class fons(GameSpraite):
+    def updaet(self,u,i):
+        self.rect.x-=self.speed
+        if self.rect.x < u:
+            self.rect.x = win_width
+
+
 font.init()
 font1 = font.Font(None,36)
 text = font1.render("Счет: "+str(point),1,(0,0,0))
 
+x_dino =0
+dal_lain = -100
 sprait_slaim = "slame.png"
 sprait_slaim_fail = "slame_fail.png"
+fon = 'fon.jpg'
 
 hiro = Plair(sprait_slaim,50,400,50,50,10,14,False)
-enim = Enemi("enemi.png",700,380,70,70,25,16,False)
+enim = Enemi("enemi.png",x_dino - 200,380,70,70,25,16,False)
 bony = bonys("bonys.png",1000,380,50,50,25,16,False)
 x_tra = 0
+x_fon = 0
 trais=sprite.Group()
+fonnn=sprite.Group()
 for i in range(1,12):
-    trai = train("1_blok.png",x_tra,450,100,200,25,16,False)
+    trai = train("1_blok.png",x_tra,450,100,200,25,8,False)
     x_tra += 100
     trais.add(trai)
+for i in range(1,3):
+    fonn = fons(fon,x_fon,0,800,500,10,16,False)
+    x_fon += 800
+    fonnn.add(fonn)
 
 
 finush = False
@@ -105,31 +120,33 @@ while game:
         	game = False
 
     if finush != True:
-        window.blit(background,(0,0))
+        # window.blit(background,(0,0))
+        for i in fonnn:
+            i.updaet(-800,800)
+            i.reset()
         text = font1.render("Счет: "+str(point),1,(0,0,0))
         window.blit(text,(10,20))
         hiro.update()
         hiro.reset()
         enim.upleut()
         enim.reset()
-        if point >= 8:
-            if point % 8 == 0:
-                bony.upleut()
-                bony.reset()
         for i in trais:
             i.upleut()
             i.reset()
-        if point == p:
-            p += 10
-            FPS += 1
+        if FPS <= 50:
+            if point == p:
+                p += 1
+                FPS += 1
+                dal_lain -= 20
         if sprite.collide_rect(hiro,bony):
             reform = True
             hiro.new(sprait_slaim_fail)
-        if p1== 8:
+        if p1== 4:
             hiro.new2(sprait_slaim)
             p1 = 0
-
-            # finush = True
+        if point == 4:
+            bony.upleut()
+            bony.reset()
 
 
     # за цикливание
